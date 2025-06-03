@@ -57,34 +57,88 @@ ComputerAPI/
 
 ## Getting Started
 
-1. Clone the repository
-2. Navigate to the project directory:
-   ```
-   cd ComputerAPI
-   ```
-3. Restore dependencies:
-   ```
-   dotnet restore
-   ```
-4. Create and apply database migrations:
-   ```
-   dotnet ef migrations add InitialCreate
-   dotnet ef database update
-   ```
+### Các bước để chạy dự án sau khi clone
 
-   Or use the provided migration script:
-   ```
-   chmod +x migrate.sh
-   ./migrate.sh
-   ```
-5. Run the application:
-   ```
-   dotnet run
-   ```
-6. Access the Swagger documentation at:
-   ```
-   https://localhost:5001/swagger
-   ```
+1. **Cài đặt các công cụ và phần mềm cần thiết:**
+   - Cài đặt [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+   - Cài đặt [MySQL Server](https://dev.mysql.com/downloads/mysql/)
+   - Cài đặt EF Core CLI tools (công cụ dòng lệnh Entity Framework Core):
+     ```bash
+     dotnet tool install --global dotnet-ef
+     ```
+     Hoặc nếu đã cài đặt, cập nhật lên phiên bản mới nhất:
+     ```bash
+     dotnet tool update --global dotnet-ef
+     ```
+
+2. **Thiết lập cơ sở dữ liệu:**
+   - Tạo một database mới trong MySQL có tên `computer_store`
+   - Cập nhật chuỗi kết nối trong file `appsettings.json` với thông tin MySQL của bạn:
+     ```json
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=localhost;Database=computer_store;User=YOUR_USERNAME;Password=YOUR_PASSWORD;Port=3306;CharSet=utf8mb4;"
+     }
+     ```
+
+3. **Cấu hình JWT trong file `appsettings.json`:**
+   - Đảm bảo thiết lập một khóa bí mật JWT mạnh:
+     ```json
+     "JWT": {
+       "Secret": "your_super_secure_key_with_at_least_32_characters",
+       "Issuer": "computer-api",
+       "Audience": "computer-client",
+       "ExpirationMinutes": 60
+     }
+     ```
+
+4. **Clone và chuẩn bị dự án:**
+   - Clone repository:
+     ```bash
+     git clone <repository-url>
+     ```
+   - Di chuyển vào thư mục dự án:
+     ```bash
+     cd computer-api/ComputerAPI
+     ```
+   - Khôi phục các dependency:
+     ```bash
+     dotnet restore
+     ```
+
+5. **Áp dụng migrations để tạo cấu trúc cơ sở dữ liệu:**
+   - Để áp dụng migration có sẵn:
+     ```bash
+     dotnet ef database update
+     ```
+   - Nếu muốn tạo migration mới:
+     ```bash
+     dotnet ef migrations add InitialCreate
+     dotnet ef database update
+     ```
+
+6. **Build và chạy ứng dụng:**
+   - Build dự án:
+     ```bash
+     dotnet build
+     ```
+   - Chạy ứng dụng:
+     ```bash
+     dotnet run
+     ```
+
+7. **Truy cập ứng dụng:**
+   - API sẽ chạy trên:
+     - HTTP: http://localhost:5184
+     - HTTPS: https://localhost:7278
+   - Truy cập Swagger UI để xem tài liệu API tại:
+     ```
+     http://localhost:5184/swagger
+     ```
+
+8. **Đăng nhập với tài khoản mặc định:**
+   - Sau khi khởi chạy lần đầu, hệ thống sẽ tự động tạo tài khoản super_admin:
+     - Email: admin@example.com
+     - Password: Admin@123456
 
 ## API Endpoints
 
