@@ -52,8 +52,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         connectionString,
-        ServerVersion.AutoDetect(connectionString),
-        o => o.SchemaBehavior(MySqlSchemaBehavior.Ignore)
+        ServerVersion.AutoDetect(connectionString)
     )
 );
 
@@ -126,6 +125,16 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
         context.Database.Migrate();
+        
+        // Execute custom SQL to reset auto-increment values to start from 1
+        var sqlFile = Path.Combine(AppContext.BaseDirectory, "reset_auto_increment.sql");
+        if (File.Exists(sqlFile))
+        {
+            var sql = File.ReadAllText(sqlFile);
+            context.Database.ExecuteSqlRaw(sql);
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogInformation("Auto-increment values have been reset to start from 1.");
+        }
         
         // Seed default roles and admin user
         await ApplicationDbContext.SeedDefaultDataAsync(services);

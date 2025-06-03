@@ -2,6 +2,7 @@ using ComputerAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace ComputerAPI.Data;
 
@@ -42,6 +43,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.Entity<IdentityUserClaim<string>>(entity =>
         {
             entity.ToTable("user_claims");
+            // Auto-increment ID will be configured in migrations
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         builder.Entity<IdentityUserLogin<string>>(entity =>
@@ -52,12 +55,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.Entity<IdentityRoleClaim<string>>(entity =>
         {
             entity.ToTable("role_claims");
+            // Auto-increment ID will be configured in migrations
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         builder.Entity<IdentityUserToken<string>>(entity =>
         {
             entity.ToTable("user_tokens");
         });
+        
+        // Auto-increment configuration will be handled in migrations
     }
 
     /// <summary>
